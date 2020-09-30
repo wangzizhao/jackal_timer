@@ -41,8 +41,9 @@ def path_coord_to_gazebo_coord(x, y):
 
     return (gazebo_x, gazebo_y)
 
-
-for num in range(0, len(os.listdir('../benchmarking_dataset/world_files'))):
+envs = [281, 266, 239, 219, 274, 294, 225, 232, 288, 279, 13, 247, 290, 286, 296, 19, 291, 249, 257, 282, 177, 280, 243, 78, 298, 206, 114, 287, 203, 277, 254, 148, 273, 195, 297, 138, 263, 289, 164, 255, 157, 270, 207, 187, 264, 111, 299, 271, 104, 283]
+envs = envs * 5
+for num in envs:
     # results are currently stored in a text file and moved to npy thereafter
     # ### REPLACE this with the desired filename
     fout = open('../altered_dwa_2.txt', 'a')
@@ -75,7 +76,7 @@ for num in range(0, len(os.listdir('../benchmarking_dataset/world_files'))):
 
     world_name = 'world_%d.world' % num
 
-    args_list = ['../launch/time_trial.launch', 'world_name:=$(find jackal_timer)/benchmarking_dataset/world_files/' + world_name, 'gui:=false', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y), 
+    args_list = ['../launch/time_trial.launch', 'world_name:=$(find jackal_timer)/benchmarking_dataset/world_files/' + world_name, 'gui:=true', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y), 
         'goal_x:=' + str(goal_x), 'goal_y:=' + str(goal_y), 'config:=front_laser']
     lifelong_args = args_list[1:]
     launch_files = [(roslaunch.rlutil.resolve_launch_arguments(args_list)[0], lifelong_args)]
