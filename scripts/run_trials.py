@@ -16,6 +16,8 @@ roslaunch.configure_logging(uuid)
 # whenever listener node receives a message, update duration
 curr_duration = 0.0
 trial_running = True
+
+
 def callback(data):
     global curr_duration
     global trial_running
@@ -24,15 +26,16 @@ def callback(data):
         trial_running = False
     else:
         curr_duration = float(data.data)
-        #print("%f" % curr_duration)
+        # print("%f" % curr_duration)
 
 # create node to listen to duration topic
 rospy.init_node('duration_listener', anonymous=True)
 rospy.Subscriber('duration', Float32, callback)
 
-# input: row and column from the occupancy grid
-# output: their corresponding position in the gazebo world
+
 def path_coord_to_gazebo_coord(x, y):
+    # input: row and column from the occupancy grid
+    # output: their corresponding position in the gazebo world
     r_shift = -RADIUS - (30 * RADIUS * 2)
     c_shift = RADIUS + 5
 
@@ -41,13 +44,13 @@ def path_coord_to_gazebo_coord(x, y):
 
     return (gazebo_x, gazebo_y)
 
-envs = [281, 266, 239, 219, 274, 294, 225, 232, 288, 279, 13, 247, 290, 286, 296, 19, 291, 249, 257, 282, 177, 280, 243, 78, 298, 206, 114, 287, 203, 277, 254, 148, 273, 195, 297, 138, 263, 289, 164, 255, 157, 270, 207, 187, 264, 111, 299, 271, 104, 283]
+envs = [254, 283, 264, 297, 232, 239, 289, 266, 279, 270, 280, 138, 299, 78, 298, 273, 294, 288, 277, 281, 287, 177, 13, 203, 187, 282, 255, 19, 207, 243]
 envs = envs * 5
 for num in envs:
     # results are currently stored in a text file and moved to npy thereafter
     # ### REPLACE this with the desired filename
     fout = open('../altered_dwa_2.txt', 'a')
-    
+
     curr_duration = 0.0
     trial_running = True
 
@@ -55,7 +58,7 @@ for num in envs:
     # with a cylinder radius of 0.075
     path = np.load('../benchmarking_dataset/path_files/path_%d.npy' % num)
     path_start = path[0]
-    path_end = path[len(path)-1]
+    path_end = path[len(path) - 1]
 
     start_x, start_y = path_coord_to_gazebo_coord(path_start[0], path_start[1])
     goal_x, goal_y = path_coord_to_gazebo_coord(path_end[0], path_end[1])
@@ -63,10 +66,9 @@ for num in envs:
     goal_y += 2 * RADIUS * 2
     start_y -= 1
 
-
     if start_x > -0.5:
         start_x = -0.5
-    
+
     if start_x < -3.9:
         start_x = -3.9
 
@@ -76,8 +78,10 @@ for num in envs:
 
     world_name = 'world_%d.world' % num
 
-    args_list = ['../launch/time_trial.launch', 'world_name:=$(find jackal_timer)/benchmarking_dataset/world_files/' + world_name, 'gui:=true', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y), 
-        'goal_x:=' + str(goal_x), 'goal_y:=' + str(goal_y), 'config:=front_laser']
+    args_list = ['../launch/time_trial.launch',
+                 'world_name:=$(find jackal_timer)/benchmarking_dataset/world_files/' + world_name,
+                 'gui:=true', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y),
+                 'goal_x:=' + str(goal_x), 'goal_y:=' + str(goal_y), 'config:=front_laser']
     lifelong_args = args_list[1:]
     launch_files = [(roslaunch.rlutil.resolve_launch_arguments(args_list)[0], lifelong_args)]
 
