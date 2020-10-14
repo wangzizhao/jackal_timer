@@ -44,7 +44,9 @@ def path_coord_to_gazebo_coord(x, y):
 
     return (gazebo_x, gazebo_y)
 
-envs = [254, 283, 264, 297, 232, 239, 289, 266, 279, 270, 280, 138, 299, 78, 298, 273, 294, 288, 277, 281, 287, 177, 13, 203, 187, 282, 255, 19, 207, 243]
+# envs = [254, 283, 264, 297, 232, 239, 289, 266, 279, 270, 280, 138, 299, 78, 298, 273, 294, 288, 277, 281, 287, 177, 13, 203, 187, 282, 255, 19, 207, 243]
+# envs = [187, 282, 255, 19, 207, 243]
+envs = list(range(300))
 envs = envs * 5
 for num in envs:
     # results are currently stored in a text file and moved to npy thereafter
@@ -80,7 +82,7 @@ for num in envs:
 
     args_list = ['../launch/time_trial.launch',
                  'world_name:=$(find jackal_timer)/benchmarking_dataset/world_files/' + world_name,
-                 'gui:=true', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y),
+                 'gui:=false', 'start_x:=' + str(start_x), 'start_y:=' + str(start_y),
                  'goal_x:=' + str(goal_x), 'goal_y:=' + str(goal_y), 'config:=front_laser']
     lifelong_args = args_list[1:]
     launch_files = [(roslaunch.rlutil.resolve_launch_arguments(args_list)[0], lifelong_args)]

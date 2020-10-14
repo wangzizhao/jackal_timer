@@ -57,6 +57,6 @@ if __name__ == '__main__':
         time_pub.publish(Float32(duration))
 
         
-        if ((jackal_x-goal_x)**2)+((jackal_y-goal_y)**2) < 0.15 or duration > 50.0:
+        if ((jackal_x-goal_x)**2)+((jackal_y-goal_y)**2) < 0.15:# or duration > 50.0:
             time_pub.publish(Float32(-1.0))
             rospy.signal_shutdown("Done")
