@@ -4,13 +4,13 @@
 
   <!-- Gazebo Stuff -->
   <arg name="use_sim_time" default="true" />
-  <arg name="gui" default="true" />
+  <arg name="gui" default="false" />
   <arg name="headless" default="false" />
 
-  <arg name="world_name" default="$(find jackal_timer)/benchmarking_dataset/world_files/world_0.world" />
+  <arg name="world_name" default="$(find jackal_timer)/benchmarking_dataset/world_files/world_297.world" />
 
-  <arg name="start_x" default="0" />
-  <arg name="start_y" default="0" />
+  <arg name="start_x" default="-2" />
+  <arg name="start_y" default="1" />
   <arg name="yaw" default="1.5708" />
 
   <arg name="goal_x" default="0" />
@@ -82,6 +82,7 @@
   <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
 
   <remap from="odom" to="odometry/filtered" />
+  <remap from="cmd_vel" to="cmd_vel_" />
  </node>
 
 
@@ -98,13 +99,14 @@
 
 
    <!-- traversal_timer -->
-  <node pkg="jackal_timer" name="traversal_timer" type="traversal_timer.py" args="$(arg goal_x) $(arg goal_y) $(arg start_x) $(arg start_y)" output="screen" required = "true">
+  <node pkg="jackal_timer" name="traversal_timer" type="traversal_timer.py" args="$(arg goal_x) $(arg goal_y) $(arg start_x) $(arg start_y)" output="screen">
   </node>
 
-  <node pkg="context_classifier" type="context_classifier.py" name="context_classifier" output="screen">
+  <!-- <node pkg="context_classifier" type="context_classifier.py" name="context_classifier" output="screen">
+  </node> -->
+
+  <node pkg="LfH" type="run_policy.py" name="LfH" output="screen" required = "true">
   </node>
-
-
 
 
 
