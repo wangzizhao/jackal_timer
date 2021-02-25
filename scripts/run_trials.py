@@ -46,8 +46,7 @@ def path_coord_to_gazebo_coord(x, y):
 
 # envs = [254, 283, 264, 297, 232, 239, 289, 266, 279, 270, 280, 138, 299, 78, 298, 273, 294, 288, 277, 281, 287, 177, 13, 203, 187, 282, 255, 19, 207, 243]
 # envs = [187, 282, 255, 19, 207, 243]
-envs = list(range(300))
-envs = envs * 5
+envs = list(range(300)) * 10
 for num in envs:
     # results are currently stored in a text file and moved to npy thereafter
     # ### REPLACE this with the desired filename
@@ -91,11 +90,14 @@ for num in envs:
     parent = roslaunch.parent.ROSLaunchParent(uuid, launch_files)
     parent.start()
 
-    while trial_running and curr_duration < 50.0:
-        pass
+    trial_start = rospy.get_time()
 
-    fout.write('%d\n%f\n' % (num, curr_duration))
-    fout.close()
+    while trial_running:
+        if rospy.get_time() - trial_start > 90.0:
+            break
 
     parent.shutdown()
+    if not trial_running:
+        fout.write('%d\n%f\n' % (num, curr_duration))
+    fout.close()
     print("Finished %d" % num)
