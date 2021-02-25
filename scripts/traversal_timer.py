@@ -12,7 +12,7 @@ import sys
 
 class Robot():
     def __init__(self):
-        self.X = 0 # inertia frame
+        self.X = 0  # inertia frame
         self.Y = 0
         self.PSI = 0
 
@@ -23,8 +23,8 @@ class Robot():
         q0 = msg.pose.pose.orientation.w
         self.X = msg.pose.pose.position.x
         self.Y = msg.pose.pose.position.y
-        self.PSI = np.arctan2(2 * (q0*q3 + q1*q2), (1 - 2*(q2**2+q3**2)))
-        
+        self.PSI = np.arctan2(2 * (q0 * q3 + q1 * q2), (1 - 2 * (q2**2 + q3**2)))
+
 
 if __name__ == '__main__':
     goal_x = float(sys.argv[1])
@@ -43,20 +43,17 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         duration = rospy.get_time() - start_time
-
-        #jackal_x = jackal.X + offset_x
-        #jackal_y = jackal.Y + offset_y
         jackal_x = jackal.X
         jackal_y = jackal.Y
 
         # only start timer once jackal starts moving
-        if ((jackal_x - 0.0)**2)+((jackal_y - 0.0)**2) < 0.1:
+        if ((jackal_x - 0.0)**2) + ((jackal_y - 0.0)**2) < 0.1:
             duration = 0
             start_time = rospy.get_time()
 
         time_pub.publish(Float32(duration))
 
-        
-        if ((jackal_x-goal_x)**2)+((jackal_y-goal_y)**2) < 0.15:# or duration > 50.0:
+        if ((jackal_x - goal_x)**2) + ((jackal_y - goal_y)**2) < 0.15 or duration > 60.0:
             time_pub.publish(Float32(-1.0))
             rospy.signal_shutdown("Done")
+            exit()
